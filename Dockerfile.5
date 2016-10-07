@@ -5,16 +5,17 @@ LABEL role='php-fpm' version='5.6' tags='php,php5,php-fpm' description='php5 fpm
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     TIMEZONE="Asia/Shanghai" \
     PHP_MAX_EXECUTION=900 \
-    PHP_MEMORY_LIMIT=5G \
-    PHP_MAX_UPLOAD_SIZE=50M \
+    PHP_MEMORY_LIMIT=256m \
+    PHP_MAX_UPLOAD_SIZE=50m \
     PHP_MAX_UPLOAD=200 \
-    PHP_MAX_POST=100M \
+    PHP_MAX_POST=100m \
     FPM_RESTART_THRESHOLD=30 \
     FPM_RESTART_INTERVAL=30s \
-    FPM_MAX=128 \
+    FPM_MAX=512 \
     FPM_MAX_REQUESTS=8192
 #install software
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update && \
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \ 
+    apk update && \
 # ensure www-data user exists
     addgroup -g 82 -S www-data && \
     adduser -u 82 -D -S -G www-data -h /var/www www-data && \
@@ -55,37 +56,44 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     php5-sockets \
     php5-fpm && \
 # Set environments
+    sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php5/php-fpm.conf && \
     sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php5/php-fpm.conf && \
     sed -i "s|;*listen\s*=\s*/||g" /etc/php5/php-fpm.conf && \
-    sed -i "s|;emergency_restart_threshold =.*|emergency_restart_threshold =${FPM_RESTART_THRESHOLD}|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;emergency_restart_interval =.*|emergency_restart_interval =${FPM_RESTART_INTERVAL}|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;process_control_timeout =.*|process_control_timeout =1d|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;process.max =.*|process.max =${FPM_MAX}|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;pm.max_requests =.*|pm.max_requests =${FPM_MAX_REQUESTS}|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;pm.status_path =.*|pm.status_path =/pstatus|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;ping.path =.*|ping.path =/pping|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;access.format =.*|access.format =\"%R - %u %t \"%m %r%Q%q\" %s %f %{mili}d %{kilo}M %C%%\"|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;clear_env =.*|clear_env = no|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;access.log\s*=.*|access.log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;catch_workers_output = yes\s*=.*|catch_workers_output = yes|i" /etc/php5/php-fpm.conf && \
+#   sed -i "s|;\s*emergency_restart_threshold\s*=.*|emergency_restart_threshold =${FPM_RESTART_THRESHOLD}|i" /etc/php5/php-fpm.conf && \
+#   sed -i "s|;\s*emergency_restart_interval\s*=.*|emergency_restart_interval =${FPM_RESTART_INTERVAL}|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*process_control_timeout\s*=.*|process_control_timeout =1d|i" /etc/php5/php-fpm.conf && \
+#   sed -i "s|;\s*process.max\s*=.*|process.max =${FPM_MAX}|i" /etc/php5/php-fpm.conf && \
+#   sed -i "s|;*pm.max_children\s*=.*|pm.max_children =${FPM_MAX}|i" /etc/php5/php-fpm.conf && \
+#   sed -i "s|;\s*pm.max_requests\s*=.*|pm.max_requests =${FPM_MAX_REQUESTS}|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*pm.status_path\s*=.*|pm.status_path =/pstatus|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*ping.path\s*=.*|ping.path =/pping|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|\s*;access.log\s*=.*|access.log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*access.format\s*=.*|access.format =\"%R - %u %t \"%m %r%Q%q\" %s %f %{mili}d %{kilo}M %C%%\"|i" /etc/php5/php-fpm.conf && \
+#   sed -i "s|;*request_terminate_timeout\s*=.*|request_terminate_timeout = ${PHP_MAX_EXECUTION}|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;catch_workers_output\s*=.*|catch_workers_output = yes|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php5/php-fpm.conf && \
     sed -i "s|nobody|www-data|g" /etc/php5/php-fpm.conf && \
-    sed -i "s|;*date.timezone =.*|date.timezone = ${TIMEZONE}|i" /etc/php5/php.ini && \
-    sed -i "s|;*max_execution_time =.*|max_execution_time = ${PHP_MAX_EXECUTION}|i" /etc/php5/php.ini && \
-    sed -i "s|;*memory_limit =.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php5/php.ini && \
-    sed -i "s|;*upload_max_filesize =.*|upload_max_filesize = ${PHP_MAX_UPLOAD_SIZE}|i" /etc/php5/php.ini && \
-    sed -i "s|;*max_file_uploads =.*|max_file_uploads = ${PHP_MAX_UPLOAD}|i" /etc/php5/php.ini && \
-    sed -i "s|;*post_max_size =.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php5/php.ini && \
-    sed -i "s|;*cgi.fix_pathinfo=.*|cgi.fix_pathinfo= 0|i" /etc/php5/php.ini && \
-    cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
-    echo "${TIMEZONE}" > /etc/timezone && \
+#   sed -i "s|date.timezone\s*=.*|date.timezone = ${TIMEZONE}|i" /etc/php5/php.ini && \
+#   sed -i "s|max_execution_time\s*=.*|max_execution_time = ${PHP_MAX_EXECUTION}|i" /etc/php5/php.ini && \
+#   sed -i "s|memory_limit\s*=.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php5/php.ini && \
+#   sed -i "s|upload_max_filesize\s*=.*|upload_max_filesize = ${PHP_MAX_UPLOAD_SIZE}|i" /etc/php5/php.ini && \
+#   sed -i "s|max_file_uploads\s*=.*|max_file_uploads = ${PHP_MAX_UPLOAD}|i" /etc/php5/php.ini && \
+#   sed -i "s|post_max_size\s*=.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php5/php.ini && \
+    sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php5/php.ini && \
+    sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php5/php.ini && \
+#   cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
+#   echo "${TIMEZONE}" > /etc/timezone && \
    # Cleaning up
-    apk del tzdata && \
+#   apk del tzdata && \
     rm -rf /var/cache/apk/*
+#start scripts
+COPY run.sh /opt/
 # Set Workdir
 WORKDIR /var/www
 # Expose volumes
 VOLUME ["/var/www"]
 # Entry point
-ENTRYPOINT ["/usr/bin/php-fpm","-F"]
+# ENTRYPOINT ["/usr/bin/php-fpm","-F"]
+ENTRYPOINT ["sh"]
+CMD ["/opt/run.sh"]
