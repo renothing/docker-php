@@ -20,4 +20,4 @@ sed -i "s|post_max_size\s*=.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php5/php.i
 cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 echo "${TIMEZONE}" > /etc/timezone 
 stat -c "%U" /var/www|grep -q www-data || chown www-data:www-data -R /var/www
-/usr/bin/php-fpm -F
+exec /usr/bin/php-fpm -F
