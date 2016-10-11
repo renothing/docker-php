@@ -19,5 +19,5 @@ sed -i "s|max_file_uploads\s*=.*|max_file_uploads = ${PHP_MAX_UPLOAD}|i" /etc/ph
 sed -i "s|post_max_size\s*=.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php5/php.ini && \
 cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 echo "${TIMEZONE}" > /etc/timezone 
-stat -c "%U" /var/www|grep -q www-data || chown www-data:www-data -R /var/www
+stat -c "%U" /var/www|grep -q www-data || chown www-data:www-data /var/www
 exec /usr/bin/php-fpm -F
