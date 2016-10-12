@@ -21,6 +21,7 @@ RUN apk update && \
     adduser -u 82 -D -S -G www-data -h /var/www www-data && \
 # 82 is the standard uid/gid for "www-data" in Alpine
     apk add tzdata \
+    execline \
     ca-certificates \
     imagemagick \
     php5-mcrypt \
