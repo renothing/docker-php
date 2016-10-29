@@ -72,7 +72,7 @@ RUN apk update && \
     sed -i "s|;\s*ping.path\s*=.*|ping.path =/pping|i" /etc/php5/php-fpm.conf && \
     sed -i "s|\s*;access.log\s*=.*|access.log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
     sed -i "s|\s*;slowlog\s*=.*|slowlog = /dev/stderr|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;\s*access.format\s*=.*|access.format =\"%R - %u %t \"%m %r%Q%q\" %s %f %{mili}d %{kilo}M %C%%\"|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*access.format\s*=.*|access.format =\"%R - %u %t \"%m %r%Q%q\" %s %f %{micro}d %{kilo}M %C%%\"|i" /etc/php5/php-fpm.conf && \
 #   sed -i "s|;*request_terminate_timeout\s*=.*|request_terminate_timeout = ${PHP_MAX_EXECUTION}|i" /etc/php5/php-fpm.conf && \
     sed -i "s|;catch_workers_output\s*=.*|catch_workers_output = yes|i" /etc/php5/php-fpm.conf && \
     sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php5/php-fpm.conf && \
