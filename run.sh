@@ -13,6 +13,7 @@ sed -i "s|pm.start_servers\s*=.*|;pm.start_servers = 2|i" /etc/php5/php-fpm.conf
 sed -i "s|pm.max_spare_servers\s*=.*|pm.max_spare_servers =${FPM_MAX}|i" /etc/php5/php-fpm.conf && \
 sed -i "s|;\s*pm.max_requests\s*=.*|pm.max_requests =${FPM_MAX_REQUESTS}|i" /etc/php5/php-fpm.conf && \
 sed -i "s|;*request_terminate_timeout\s*=.*|request_terminate_timeout = ${PHP_MAX_EXECUTION}|i" /etc/php5/php-fpm.conf && \
+sed -i "s|;*request_slowlog_timeout\s*=.*|request_slowlog_timeout = ${FPM_SLOW_TIME}|i" /etc/php5/php-fpm.conf && \
 sed -i "s|date.timezone\s*=.*|date.timezone = ${TIMEZONE}|i" /etc/php5/php.ini && \
 sed -i "s|max_execution_time\s*=.*|max_execution_time = ${PHP_MAX_EXECUTION}|i" /etc/php5/php.ini && \
 sed -i "s|memory_limit\s*=.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php5/php.ini && \
