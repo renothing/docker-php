@@ -1,6 +1,6 @@
 FROM alpine:3.4
 MAINTAINER renothing 'frankdot@qq.com'
-LABEL role='php-fpm' version='5.6.26' tags='php,php5,php-fpm' description='php5 fpm based on alpine'
+LABEL role='php-fpm' tags='php,php5,php-fpm' description='php5 fpm based on alpine'
 #set language enviroments
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     TIMEZONE="Asia/Shanghai" \
@@ -15,48 +15,74 @@ ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     FPM_MAX_REQUESTS=8192 \
     FPM_SLOW_TIME=6s
 #install software
-#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update && \ 
+#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g;s/http/https/g' /etc/apk/repositories && apk update && \ 
 RUN apk update && \ 
 # ensure www-data user exists
     addgroup -g 82 -S www-data && \
     adduser -u 82 -D -S -G www-data -h /var/www www-data && \
 # 82 is the standard uid/gid for "www-data" in Alpine
-    apk add tzdata \
-    execline \
-    ca-certificates \
+    apk add --no-cache --virtual .pre-deps \
     imagemagick \
-    php5-mcrypt \
-    php5-soap \
-    php5-openssl \
-    php5-gmp \
-    php5-pdo_odbc \
-    php5-json \
-    php5-dom \
-    php5-pdo \
-    php5-zip \
-    php5-zlib \
-    php5-mysql \
-    php5-mysqli \
-    php5-sqlite3 \
+    tzdata \
+    execline \
+    libssl1.0 \
+    ca-certificates \
+    curl \
+    tar \
+    xz && \
+    apk add --no-cache --virtual .fetch-deps \
+    autoconf \
+    dpkg-dev dpkg \
+    file \
+    g++ \
+    gcc \
+    libc-dev \
+    make \
+    pcre-dev \
+    pkgconf \
+    re2c \
+    coreutils \
+    curl-dev \
+    libedit-dev \
+    libxml2-dev \
+    openssl-dev \
+    sqlite-dev \
+    imagemagick-dev \
+    libtool && \
+# install php
+    apk add \
     php5-apcu \
-    php5-pdo_pgsql \
     php5-bcmath \
+    php5-bz2 \
+    php5-ctype \
+    php5-curl \
+    php5-dev \
+    php5-dom \
+    php5-fpm \
     php5-gd \
-    php5-imagick \
-    php5-xcache \
-    php5-odbc \
-    php5-pdo_mysql \
-    php5-pdo_sqlite \
     php5-gettext \
+    php5-gmp \
+    php5-iconv \
+    php5-imap \
+    php5-json \
+    php5-mcrypt \
+    php5-mysqli \
+    php5-odbc \
+    php5-openssl \
+    php5-pdo \
+    php5-pdo_mysql \
+    php5-pdo_odbc \
+    php5-pdo_pgsql \
+    php5-pdo_sqlite \
+    php5-pear \
+    php5-soap \
+    php5-sockets \
+    php5-sqlite3 \
+    php5-xml \
     php5-xmlreader \
     php5-xmlrpc \
-    php5-bz2 \
-    php5-memcache \
-    php5-iconv \
-    php5-curl \
-    php5-ctype \
-    php5-sockets \
-    php5-fpm && \
+    php5-zip \
+    php5-zlib && \
 # Set environments
     sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php5/php-fpm.conf && \
@@ -85,9 +111,18 @@ RUN apk update && \
 #   sed -i "s|post_max_size\s*=.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php5/php.ini && \
     sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php5/php.ini && \
     sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php5/php.ini && \
+#install mongodb module
+#   pecl channel-update pecl.php.net && \
+    pecl install mongodb oauth imagick redis && \
+    echo "extension=mongodb.so"> /etc/php5/conf.d/02_mongodb.ini && \
+    echo "extension=oauth.so"> /etc/php5/conf.d/03_oauth.ini && \
+    echo "extension=imagick.so"> /etc/php5/conf.d/03_imagick.ini && \
+    echo "extension=redis.so"> /etc/php5/conf.d/03_redis.ini
    # Cleaning up
 #   apk del tzdata && \
-    rm -rf /var/cache/apk/*
+RUN pear update-channels && \
+    apk del .fetch-deps && \
+    rm -rf /var/cache/apk/* /tmp/* ~/.pearrc
 #start scripts
 COPY run.sh /opt/
 # Set Workdir
