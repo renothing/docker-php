@@ -5,8 +5,9 @@
 #
 # Distributed under terms of the Apache license.
 #
-pconf=/etc/php5/php.ini
-fconf=/etc/php5/php-fpm.conf
+v=`php -r "echo PHP_MAJOR_VERSION;"`
+pconf=/etc/php${v}/php.ini
+fconf=/etc/php${v}/php-fpm.conf
 sed -i "s|;\s*emergency_restart_threshold\s*=.*|emergency_restart_threshold =${FPM_RESTART_THRESHOLD}|i" $fconf && \
 sed -i "s|;\s*emergency_restart_interval\s*=.*|emergency_restart_interval =${FPM_RESTART_INTERVAL}|i" $fconf && \
 sed -i "s|;\s*process.max\s*=.*|process.max =${FPM_MAX}|i" $fconf && \
@@ -25,4 +26,5 @@ sed -i "s|post_max_size\s*=.*|post_max_size = ${PHP_MAX_POST}|i" $pconf && \
 cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 echo "${TIMEZONE}" > /etc/timezone 
 stat -c "%U" /var/www|grep -q www-data || chown www-data:www-data /var/www
-exec /usr/bin/php-fpm -F
+[ $v == 5 ] && exec /usr/bin/php-fpm5 -F
+[ $v == 7 ] && exec /usr/sbin/php-fpm7 -F
