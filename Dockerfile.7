@@ -30,25 +30,6 @@ RUN apk update && \
     curl \
     tar \
     xz && \
-    apk add --no-cache --virtual .fetch-deps \
-    autoconf \
-    dpkg-dev dpkg \
-    file \
-    g++ \
-    gcc \
-    libc-dev \
-    make \
-    pcre-dev \
-    pkgconf \
-    re2c \
-    coreutils \
-    curl-dev \
-    libedit-dev \
-    libxml2-dev \
-    openssl-dev \
-    sqlite-dev \
-    imagemagick-dev \
-    libtool && \
 # install php
     apk add \
     php7-apcu \
@@ -56,12 +37,10 @@ RUN apk update && \
     php7-bz2 \
     php7-ctype \
     php7-curl \
-    php7-dev \
     php7-dom \
     php7-fpm \
     php7-gd \
     php7-gettext \
-    php7-gmp \
     php7-iconv \
     php7-imagick \
     php7-imap \
@@ -78,6 +57,7 @@ RUN apk update && \
     php7-pdo_sqlite \
     php7-pear \
     php7-redis \
+    php7-session \
     php7-soap \
     php7-sockets \
     php7-sqlite3 \
@@ -91,38 +71,43 @@ RUN apk update && \
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf && \
     sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php7/php-fpm.conf && \
     sed -i "s|;*listen\s*=\s*/||g" /etc/php7/php-fpm.conf && \
-#   sed -i "s|;\s*emergency_restart_threshold\s*=.*|emergency_restart_threshold =${FPM_RESTART_THRESHOLD}|i" /etc/php7/php-fpm.conf && \
-#   sed -i "s|;\s*emergency_restart_interval\s*=.*|emergency_restart_interval =${FPM_RESTART_INTERVAL}|i" /etc/php7/php-fpm.conf && \
     sed -i "s|;\s*process_control_timeout\s*=.*|process_control_timeout =1d|i" /etc/php7/php-fpm.conf && \
-#   sed -i "s|;\s*process.max\s*=.*|process.max =${FPM_MAX}|i" /etc/php7/php-fpm.conf && \
-#   sed -i "s|;*pm.max_children\s*=.*|pm.max_children =${FPM_MAX}|i" /etc/php7/php-fpm.conf && \
-#   sed -i "s|;\s*pm.max_requests\s*=.*|pm.max_requests =${FPM_MAX_REQUESTS}|i" /etc/php7/php-fpm.conf && \
     sed -i "s|;\s*pm.status_path\s*=.*|pm.status_path =/pstatus|i" /etc/php7/php-fpm.conf && \
     sed -i "s|;\s*ping.path\s*=.*|ping.path =/pping|i" /etc/php7/php-fpm.conf && \
     sed -i "s|\s*;access.log\s*=.*|access.log = /dev/stderr|i" /etc/php7/php-fpm.conf && \
     sed -i "s|\s*;slowlog\s*=.*|slowlog = /dev/stderr|i" /etc/php7/php-fpm.conf && \
     sed -i "s|;\s*access.format\s*=.*|access.format =\"%R - %u %t \"%m %r%Q%q\" %s %f %{micro}d %{kilo}M %C%%\"|i" /etc/php7/php-fpm.conf && \
-#   sed -i "s|;*request_terminate_timeout\s*=.*|request_terminate_timeout = ${PHP_MAX_EXECUTION}|i" /etc/php7/php-fpm.conf && \
     sed -i "s|;catch_workers_output\s*=.*|catch_workers_output = yes|i" /etc/php7/php-fpm.conf && \
     sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php7/php-fpm.conf && \
     sed -i "s|nobody|www-data|g" /etc/php7/php-fpm.conf && \
-#   sed -i "s|date.timezone\s*=.*|date.timezone = ${TIMEZONE}|i" /etc/php7/php.ini && \
-#   sed -i "s|max_execution_time\s*=.*|max_execution_time = ${PHP_MAX_EXECUTION}|i" /etc/php7/php.ini && \
-#   sed -i "s|memory_limit\s*=.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php7/php.ini && \
-#   sed -i "s|upload_max_filesize\s*=.*|upload_max_filesize = ${PHP_MAX_UPLOAD_SIZE}|i" /etc/php7/php.ini && \
-#   sed -i "s|max_file_uploads\s*=.*|max_file_uploads = ${PHP_MAX_UPLOAD}|i" /etc/php7/php.ini && \
-#   sed -i "s|post_max_size\s*=.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php7/php.ini && \
     sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php7/php.ini && \
-    sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php7/php.ini && \
+    sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php7/php.ini 
+RUN    apk add --no-cache -t .fetch-deps \
+    autoconf \
+    dpkg-dev dpkg \
+    file \
+    g++ \
+    gcc \
+    libc-dev \
+    make \
+    pcre-dev \
+    pkgconf \
+    re2c \
+    coreutils \
+    curl-dev \
+    libedit-dev \
+    libxml2-dev \
+    openssl-dev \
+    sqlite-dev \
+    php7-dev \
+    libtool && \
 #install mongodb module
-#   pecl channel-update pecl.php.net && \
     pecl install mongodb oauth && \
     echo "extension=mongodb.so"> /etc/php7/conf.d/02_mongodb.ini && \
-    echo "extension=oauth.so"> /etc/php7/conf.d/03_oauth.ini 
-   # Cleaning up
+    echo "extension=oauth.so"> /etc/php7/conf.d/03_oauth.ini && \
+#  # Cleaning up
 #   apk del tzdata && \
-RUN pear update-channels && \
-    apk del .fetch-deps && \
+    apk del --purge -r .fetch-deps && \
     rm -rf /var/cache/apk/* /tmp/* ~/.pearrc
 #start scripts
 COPY run.sh /opt/

@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.6
 MAINTAINER renothing 'frankdot@qq.com'
 LABEL role='php-fpm' tags='php,php5,php-fpm' description='php5 fpm based on alpine'
 #set language enviroments
@@ -30,7 +30,59 @@ RUN apk update && \
     curl \
     tar \
     xz && \
-    apk add --no-cache --virtual .fetch-deps \
+# install php
+    apk add \
+#   php5-apcu \
+    php5-bcmath \
+    php5-bz2 \
+    php5-cli \
+    php5-ctype \
+    php5-curl \
+    php5-dom \
+    php5-fpm \
+    php5-gd \
+    php5-gettext \
+    php5-iconv \
+#   php5-imagick \
+    php5-imap \
+    php5-json \
+    php5-mcrypt \
+#   php5-mysqlnd \
+    php5-mysqli \
+    php5-odbc \
+    php5-openssl \
+    php5-pdo \
+    php5-pdo_mysql \
+    php5-pdo_odbc \
+    php5-pdo_pgsql \
+    php5-pdo_sqlite \
+    php5-pear \
+#   php5-redis \
+    php5-soap \
+    php5-sockets \
+    php5-sqlite3 \
+    php5-xml \
+    php5-xmlreader \
+    php5-xmlrpc \
+    php5-zip \
+    php5-zlib && \
+# Set environments
+    sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php5/php-fpm.conf && \
+    sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php5/php-fpm.conf && \
+    sed -i "s|;*listen\s*=\s*/||g" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*process_control_timeout\s*=.*|process_control_timeout =1d|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*pm.status_path\s*=.*|pm.status_path =/pstatus|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*ping.path\s*=.*|ping.path =/pping|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|\s*;access.log\s*=.*|access.log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|\s*;slowlog\s*=.*|slowlog = /dev/stderr|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*access.format\s*=.*|access.format =\"%R - %u %t \"%m %r%Q%q\" %s %f %{micro}d %{kilo}M %C%%\"|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;catch_workers_output\s*=.*|catch_workers_output = yes|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php5/php-fpm.conf && \
+    sed -i "s|nobody|www-data|g" /etc/php5/php-fpm.conf && \
+    sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php5/php.ini && \
+    sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php5/php.ini 
+RUN    apk add --no-cache -t .fetch-deps \
     autoconf \
     dpkg-dev dpkg \
     file \
@@ -47,81 +99,21 @@ RUN apk update && \
     libxml2-dev \
     openssl-dev \
     sqlite-dev \
+    php5-dev \
     imagemagick-dev \
     libtool && \
-# install php
-    apk add \
-    php5-apcu \
-    php5-bcmath \
-    php5-bz2 \
-    php5-ctype \
-    php5-curl \
-    php5-dev \
-    php5-dom \
-    php5-fpm \
-    php5-gd \
-    php5-gettext \
-    php5-gmp \
-    php5-iconv \
-    php5-imap \
-    php5-json \
-    php5-mcrypt \
-    php5-mysqli \
-    php5-odbc \
-    php5-openssl \
-    php5-pdo \
-    php5-pdo_mysql \
-    php5-pdo_odbc \
-    php5-pdo_pgsql \
-    php5-pdo_sqlite \
-    php5-pear \
-    php5-soap \
-    php5-sockets \
-    php5-sqlite3 \
-    php5-xml \
-    php5-xmlreader \
-    php5-xmlrpc \
-    php5-zip \
-    php5-zlib && \
-# Set environments
-    sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php5/php-fpm.conf && \
-    sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php5/php-fpm.conf && \
-    sed -i "s|;*listen\s*=\s*/||g" /etc/php5/php-fpm.conf && \
-#   sed -i "s|;\s*emergency_restart_threshold\s*=.*|emergency_restart_threshold =${FPM_RESTART_THRESHOLD}|i" /etc/php5/php-fpm.conf && \
-#   sed -i "s|;\s*emergency_restart_interval\s*=.*|emergency_restart_interval =${FPM_RESTART_INTERVAL}|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;\s*process_control_timeout\s*=.*|process_control_timeout =1d|i" /etc/php5/php-fpm.conf && \
-#   sed -i "s|;\s*process.max\s*=.*|process.max =${FPM_MAX}|i" /etc/php5/php-fpm.conf && \
-#   sed -i "s|;*pm.max_children\s*=.*|pm.max_children =${FPM_MAX}|i" /etc/php5/php-fpm.conf && \
-#   sed -i "s|;\s*pm.max_requests\s*=.*|pm.max_requests =${FPM_MAX_REQUESTS}|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;\s*pm.status_path\s*=.*|pm.status_path =/pstatus|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;\s*ping.path\s*=.*|ping.path =/pping|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|\s*;access.log\s*=.*|access.log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|\s*;slowlog\s*=.*|slowlog = /dev/stderr|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;\s*access.format\s*=.*|access.format =\"%R - %u %t \"%m %r%Q%q\" %s %f %{micro}d %{kilo}M %C%%\"|i" /etc/php5/php-fpm.conf && \
-#   sed -i "s|;*request_terminate_timeout\s*=.*|request_terminate_timeout = ${PHP_MAX_EXECUTION}|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;catch_workers_output\s*=.*|catch_workers_output = yes|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|nobody|www-data|g" /etc/php5/php-fpm.conf && \
-#   sed -i "s|date.timezone\s*=.*|date.timezone = ${TIMEZONE}|i" /etc/php5/php.ini && \
-#   sed -i "s|max_execution_time\s*=.*|max_execution_time = ${PHP_MAX_EXECUTION}|i" /etc/php5/php.ini && \
-#   sed -i "s|memory_limit\s*=.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php5/php.ini && \
-#   sed -i "s|upload_max_filesize\s*=.*|upload_max_filesize = ${PHP_MAX_UPLOAD_SIZE}|i" /etc/php5/php.ini && \
-#   sed -i "s|max_file_uploads\s*=.*|max_file_uploads = ${PHP_MAX_UPLOAD}|i" /etc/php5/php.ini && \
-#   sed -i "s|post_max_size\s*=.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php5/php.ini && \
-    sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php5/php.ini && \
-    sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php5/php.ini && \
 #install mongodb module
-#   pecl channel-update pecl.php.net && \
-    pecl install mongodb oauth imagick redis && \
+    ln -s /usr/bin/php5 /usr/bin/php && \
+    ln -s /usr/bin/phpize5 /usr/bin/phpize && \
+    sed -i "$ s|\-n||g" /usr/bin/pecl && \
+    pecl install mongodb oauth redis imagick && \
     echo "extension=mongodb.so"> /etc/php5/conf.d/02_mongodb.ini && \
     echo "extension=oauth.so"> /etc/php5/conf.d/03_oauth.ini && \
+    echo "extension=redis.so"> /etc/php5/conf.d/03_redis.ini && \
     echo "extension=imagick.so"> /etc/php5/conf.d/03_imagick.ini && \
-    echo "extension=redis.so"> /etc/php5/conf.d/03_redis.ini
-   # Cleaning up
+#  # Cleaning up
 #   apk del tzdata && \
-RUN pear update-channels && \
-    apk del .fetch-deps && \
+    apk del --purge -r .fetch-deps && \
     rm -rf /var/cache/apk/* /tmp/* ~/.pearrc
 #start scripts
 COPY run.sh /opt/
