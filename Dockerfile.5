@@ -106,9 +106,8 @@ RUN    apk add --no-cache -t .fetch-deps \
     ln -s /usr/bin/php5 /usr/bin/php && \
     ln -s /usr/bin/phpize5 /usr/bin/phpize && \
     sed -i "$ s|\-n||g" /usr/bin/pecl && \
-    pecl install mongodb oauth redis imagick && \
+    pecl install mongodb redis imagick && \
     echo "extension=mongodb.so"> /etc/php5/conf.d/02_mongodb.ini && \
-    echo "extension=oauth.so"> /etc/php5/conf.d/03_oauth.ini && \
     echo "extension=redis.so"> /etc/php5/conf.d/03_redis.ini && \
     echo "extension=imagick.so"> /etc/php5/conf.d/03_imagick.ini && \
 #  # Cleaning up
