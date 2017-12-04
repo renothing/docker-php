@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.7
 LABEL author='renothing' role='php-fpm' tags='php,php7,php-fpm,php-cli' description='php7 fpm based on alpine'
 #set language enviroments
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
@@ -37,6 +37,8 @@ RUN apk update && \
     php7-ctype \
     php7-curl \
     php7-dom \
+    php7-exif \
+    php7-fileinfo \
     php7-fpm \
     php7-gd \
     php7-gettext \
