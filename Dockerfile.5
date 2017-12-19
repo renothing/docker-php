@@ -69,19 +69,21 @@ RUN apk update && \
     php5-zip \
     php5-zlib && \
 # Set environments
-    sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php5/php-fpm.conf && \
+    sed -n '/^\[www\]/,$p' /etc/php5/php-fpm.conf > /etc/php5/fpm.d/www.conf && \
+    sed -i '/^\[www\]/,$d' /etc/php5/php-fpm.conf && \
+    sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php5/fpm.d/www.conf && \
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php5/php-fpm.conf && \
-    sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php5/php-fpm.d/www.conf && \
-    sed -i "s|;*listen\s*=\s*/||g" /etc/php5/php-fpm.d/www.conf && \
+    sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php5/fpm.d/www.conf && \
+    sed -i "s|;*listen\s*=\s*/||g" /etc/php5/fpm.d/www.conf && \
     sed -i "s|;\s*process_control_timeout\s*=.*|process_control_timeout =1d|i" /etc/php5/php-fpm.conf && \
-    sed -i "s|;\s*pm.status_path\s*=.*|pm.status_path =/pstatus|i" /etc/php5/php-fpm.d/www.conf && \
-    sed -i "s|;\s*ping.path\s*=.*|ping.path =/pping|i" /etc/php5/php-fpm.d/www.conf && \
-    sed -i "s|\s*;access.log\s*=.*|access.log = /dev/stderr|i" /etc/php5/php-fpm.d/www.conf && \
-    sed -i "s|\s*;slowlog\s*=.*|slowlog = /dev/stderr|i" /etc/php5/php-fpm.d/www.conf && \
-    sed -i "s|;\s*access.format\s*=.*|access.format =\"%R - %u %t \"%m %r%Q%q\" %s %f %{micro}d %{kilo}M %C%%\"|i" /etc/php5/php-fpm.d/www.conf && \
-    sed -i "s|;catch_workers_output\s*=.*|catch_workers_output = yes|i" /etc/php5/php-fpm.d/www.conf && \
-    sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php5/php-fpm.d/www.conf && \
-    sed -i "s|nobody|www-data|g" /etc/php5/php-fpm.d/www.conf && \
+    sed -i "s|;\s*pm.status_path\s*=.*|pm.status_path =/pstatus|i" /etc/php5/fpm.d/www.conf && \
+    sed -i "s|;\s*ping.path\s*=.*|ping.path =/pping|i" /etc/php5/fpm.d/www.conf && \
+    sed -i "s|\s*;access.log\s*=.*|access.log = /dev/stderr|i" /etc/php5/fpm.d/www.conf && \
+    sed -i "s|\s*;slowlog\s*=.*|slowlog = /dev/stderr|i" /etc/php5/fpm.d/www.conf && \
+    sed -i "s|;\s*access.format\s*=.*|access.format =\"%R - %u %t \"%m %r%Q%q\" %s %f %{micro}d %{kilo}M %C%%\"|i" /etc/php5/fpm.d/www.conf && \
+    sed -i "s|;catch_workers_output\s*=.*|catch_workers_output = yes|i" /etc/php5/fpm.d/www.conf && \
+    sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php5/fpm.d/www.conf && \
+    sed -i "s|nobody|www-data|g" /etc/php5/fpm.d/www.conf && \
     sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php5/php.ini && \
     sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php5/php.ini 
 RUN    apk add --no-cache -t .fetch-deps \
