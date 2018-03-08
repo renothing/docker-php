@@ -14,7 +14,7 @@ sed -i "s|;\s*emergency_restart_threshold\s*=.*|emergency_restart_threshold =${F
 sed -i "s|;\s*emergency_restart_interval\s*=.*|emergency_restart_interval =${FPM_RESTART_INTERVAL}|i" $fconf && \
 sed -i "s|;\s*process.max\s*=.*|process.max =${FPM_MAX}|i" $fconf && \
 sed -i "s|;*pm.max_children\s*=.*|pm.max_children =${FPM_MAX}|i" $fconf1 && \
-sed -i "s|pm.start_servers\s*=.*|;pm.start_servers = 2|i" $fconf1 && \
+sed -i "s|;\s*pm.start_servers\s*=.*|;pm.start_servers = 2|i" $fconf1 && \
 sed -i "s|pm.max_spare_servers\s*=.*|pm.max_spare_servers =${FPM_MAX}|i" $fconf1 && \
 sed -i "s|;\s*pm.max_requests\s*=.*|pm.max_requests =${FPM_MAX_REQUESTS}|i" $fconf1 && \
 sed -i "s|;*request_terminate_timeout\s*=.*|request_terminate_timeout = ${PHP_MAX_EXECUTION}|i" $fconf1 && \
