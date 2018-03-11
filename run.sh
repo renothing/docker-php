@@ -26,7 +26,7 @@ sed -i "s|upload_max_filesize\s*=.*|upload_max_filesize = ${PHP_MAX_UPLOAD_SIZE}
 sed -i "s|max_file_uploads\s*=.*|max_file_uploads = ${PHP_MAX_UPLOAD}|i" $pconf && \
 sed -i "s|post_max_size\s*=.*|post_max_size = ${PHP_MAX_POST}|i" $pconf && \
 cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
-echo "${TIMEZONE}" > /etc/timezone 
+echo "${TIMEZONE}" > /etc/TZ 
 stat -c "%U" /var/www|grep -q www-data || chown www-data:www-data /var/www
 [ $v == 5 ] && exec /usr/bin/php-fpm5 -F
 [ $v == 7 ] && exec /usr/sbin/php-fpm7 -F
