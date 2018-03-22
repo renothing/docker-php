@@ -14,13 +14,14 @@ ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     FPM_MAX_REQUESTS=8192 \
     FPM_SLOW_TIME=6s
 #install software
-#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g;s/http/https/g' /etc/apk/repositories && apk update && \ 
-RUN apk update && \ 
+#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g;s/http/https/g' /etc/apk/repositories && apk upgrade --update && \ 
+RUN apk upgrade --update && \ 
 # ensure www-data user exists
     addgroup -g 82 -S www-data && \
     adduser -u 82 -D -S -G www-data -h /var/www www-data && \
 # 82 is the standard uid/gid for "www-data" in Alpine
     apk add --no-cache --virtual .pre-deps \
+    ssmtp \
     imagemagick \
     tzdata \
     execline \
@@ -86,7 +87,8 @@ RUN apk update && \
     sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php5/fpm.d/www.conf && \
     sed -i "s|nobody|www-data|g" /etc/php5/fpm.d/www.conf && \
     sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php5/php.ini && \
-    sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php5/php.ini 
+    sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php5/php.ini && \
+    sed -i "s|;\s*sendmail_path\s*=|sendmail_path = /usr/sbin/ssmtp -t|i" /etc/php5/php.ini
 RUN    apk add --no-cache -t .fetch-deps \
     autoconf \
     dpkg-dev dpkg \

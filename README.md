@@ -32,7 +32,7 @@ This repository contains **Dockerfile** of [PHP](http://www.php.net) for [Docker
     FPM_MAX_REQUESTS=8192 #max requests per process
 ```
 ### Supported tags and respective 
-* 5.6-fpm,5.6.26-fpm
+* 5-fpm,5,7,7-fpm,latest,dev
 
 ### Usage
 
@@ -43,3 +43,6 @@ docker run -dit --env-file /path/yourenv --name php -v yourapppath:/var/www --li
 #check logs
 docker logs php
 ```
+### mail()
+mount your own ssmtp config file to /etc/ssmtp/ssmtp.conf 
+ref: https://wiki.archlinux.org/index.php/SSMTP
