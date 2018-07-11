@@ -51,8 +51,10 @@ RUN apk upgrade --update && \
     php7-mbstring \
     php7-memcached \
     php7-mcrypt \
+    php7-mongodb \
     php7-mysqlnd \
     php7-mysqli \
+    php7-oauth \
     php7-odbc \
     php7-opcache \
     php7-openssl \
@@ -94,33 +96,33 @@ RUN apk upgrade --update && \
     sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php7/php.ini && \
     sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php7/php.ini && \
     sed -i "s|;\s*sendmail_path\s*=|sendmail_path = /usr/sbin/ssmtp -t|i" /etc/php7/php.ini
-RUN    apk add --no-cache -t .fetch-deps \
-    autoconf \
-    dpkg-dev dpkg \
-    file \
-    g++ \
-    gcc \
-    libc-dev \
-    make \
-    pcre-dev \
-    pkgconf \
-    re2c \
-    coreutils \
-    curl-dev \
-    libedit-dev \
-    libxml2-dev \
-    openssl-dev \
-    sqlite-dev \
-    php7-dev \
-    libtool && \
+#RUN    apk add --no-cache -t .fetch-deps \
+#   autoconf \
+#   dpkg-dev dpkg \
+#   file \
+#   g++ \
+#   gcc \
+#   libc-dev \
+#   make \
+#   pcre-dev \
+#   pkgconf \
+#   re2c \
+#   coreutils \
+#   curl-dev \
+#   libedit-dev \
+#   libxml2-dev \
+#   libressl-dev \
+#   sqlite-dev \
+#   php7-dev \
+#   libtool && \
 #install mongodb module
-    pecl install mongodb oauth && \
-    echo "extension=mongodb.so"> /etc/php7/conf.d/02_mongodb.ini && \
-    echo "extension=oauth.so"> /etc/php7/conf.d/03_oauth.ini && \
+#   pecl install mongodb oauth && \
+#   echo "extension=mongodb.so"> /etc/php7/conf.d/02_mongodb.ini && \
+#   echo "extension=oauth.so"> /etc/php7/conf.d/03_oauth.ini && \
 #  # Cleaning up
 #   apk del tzdata && \
-    apk del --purge -r .fetch-deps && \
-    rm -rf /var/cache/apk/* /tmp/* ~/.pearrc
+#   apk del --purge -r .fetch-deps && \
+RUN rm -rf /var/cache/apk/* /tmp/* ~/.pearrc
 #start scripts
 COPY run.sh /opt/
 # Set Workdir
