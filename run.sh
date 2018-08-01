@@ -25,6 +25,7 @@ sed -i "s|memory_limit\s*=.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" $pconf && \
 sed -i "s|upload_max_filesize\s*=.*|upload_max_filesize = ${PHP_MAX_UPLOAD_SIZE}|i" $pconf && \
 sed -i "s|max_file_uploads\s*=.*|max_file_uploads = ${PHP_MAX_UPLOAD}|i" $pconf && \
 sed -i "s|post_max_size\s*=.*|post_max_size = ${PHP_MAX_POST}|i" $pconf && \
+sed -i "s|max_input_vars\s*=.*|max_input_vars = 5000|i" $pconf && \
 cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 echo "${TIMEZONE}" > /etc/TZ 
 stat -c "%U" /var/www|grep -q www-data || chown www-data:www-data /var/www
