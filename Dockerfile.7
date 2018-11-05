@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:edge
 LABEL author='renothing' role='php-fpm' tags='php,php7,php-fpm,php-cli' description='php7 fpm based on alpine'
 #set language enviroments
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
@@ -25,7 +25,7 @@ RUN apk upgrade --update && \
     imagemagick \
     tzdata \
     execline \
-    libssl1.0 \
+    libressl \
     ca-certificates \
     curl \
     tar \

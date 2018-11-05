@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:edge
 LABEL author='renothing' role='php-fpm' tags='php,php5,php-fpm,php-cli' description='php5 fpm based on alpine'
 #set language enviroments
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
@@ -25,14 +25,14 @@ RUN apk upgrade --update && \
     imagemagick \
     tzdata \
     execline \
-    libssl1.0 \
+    libressl \
     ca-certificates \
     curl \
     tar \
     xz && \
 # install php
     apk add \
-#   php5-apcu \
+    php5-apcu \
     php5-bcmath \
     php5-bz2 \
     php5-cli \
@@ -104,14 +104,14 @@ RUN    apk add --no-cache -t .fetch-deps \
     curl-dev \
     libedit-dev \
     libxml2-dev \
-    openssl-dev \
+    libressl-dev \
     sqlite-dev \
     php5-dev \
     imagemagick-dev \
     libtool && \
 #install mongodb module
-    ln -s /usr/bin/php5 /usr/bin/php && \
-    ln -s /usr/bin/phpize5 /usr/bin/phpize && \
+    ln -snf /usr/bin/php5 /usr/bin/php && \
+    ln -snf /usr/bin/phpize5 /usr/bin/phpize && \
     sed -i "$ s|\-n||g" /usr/bin/pecl && \
     pecl install mongodb redis imagick memcache && \
     echo "extension=mongodb.so"> /etc/php5/conf.d/02_mongodb.ini && \
