@@ -20,6 +20,7 @@ This repository contains **Dockerfile** of [PHP](http://www.php.net) for [Docker
 3. default environments supported,you can change them before building or running.   
    the php-fpm start with port 9000
 ```
+    PORT=9000
     TIMEZONE=Asia/Shanghai
     PHP_MAX_EXECUTION=900
     PHP_MEMORY_LIMIT=256m

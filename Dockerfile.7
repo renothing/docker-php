@@ -3,6 +3,7 @@ LABEL author='renothing' role='php-fpm' tags='php,php7,php-fpm,php-cli' descript
 #set language enviroments
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     TIMEZONE="Asia/Shanghai" \
+    PORT=9000 \
     PHP_MAX_EXECUTION=900 \
     PHP_MEMORY_LIMIT=256m \
     PHP_MAX_UPLOAD_SIZE=50m \
@@ -82,7 +83,6 @@ RUN apk upgrade --update && \
 # Set environments
     sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php7/php-fpm.conf && \
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf && \
-    sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;*listen\s*=\s*/||g" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;\s*process_control_timeout\s*=.*|process_control_timeout =1d|i" /etc/php7/php-fpm.conf && \
     sed -i "s|;\s*pm.status_path\s*=.*|pm.status_path =/pstatus|i" /etc/php7/php-fpm.d/www.conf && \
@@ -108,7 +108,6 @@ RUN apk upgrade --update && \
 #   pkgconf \
 #   re2c \
 #   coreutils \
-#   curl-dev \
 #   libedit-dev \
 #   libxml2-dev \
 #   libressl-dev \
@@ -127,6 +126,7 @@ RUN rm -rf /var/cache/apk/* /tmp/* ~/.pearrc
 COPY run.sh /opt/
 # Set Workdir
 WORKDIR /var/www
+EXPOSE ${PORT}
 # Expose volumes
 #VOLUME ["/var/www"]
 # Entry point
