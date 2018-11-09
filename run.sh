@@ -10,6 +10,7 @@ pconf=/etc/php${v}/php.ini
 fconf=/etc/php${v}/php-fpm.conf
 [ $v == 5 ] && fconf1=/etc/php${v}/fpm.d/www.conf
 [ $v == 7 ] && fconf1=/etc/php${v}/php-fpm.d/www.conf
+sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = ${PORT}|g" $fconf1 && \
 sed -i "s|;\s*emergency_restart_threshold\s*=.*|emergency_restart_threshold =${FPM_RESTART_THRESHOLD}|i" $fconf && \
 sed -i "s|;\s*emergency_restart_interval\s*=.*|emergency_restart_interval =${FPM_RESTART_INTERVAL}|i" $fconf && \
 sed -i "s|;\s*process.max\s*=.*|process.max =${FPM_MAX}|i" $fconf && \
