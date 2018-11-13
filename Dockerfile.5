@@ -26,7 +26,6 @@ RUN apk upgrade --update && \
     imagemagick \
     tzdata \
     execline \
-    libressl \
     ca-certificates \
     curl \
     tar \
@@ -90,6 +89,7 @@ RUN apk upgrade --update && \
     sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php5/fpm.d/www.conf && \
     sed -i "s|nobody|www-data|g" /etc/php5/fpm.d/www.conf && \
     sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php5/php.ini && \
+    sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php5/php.ini && \
     sed -i "s|expose_php\s*=.*|expose_php = Off|i" /etc/php5/php.ini && \
     sed -i "s|;\s*sendmail_path\s*=|sendmail_path = /usr/sbin/ssmtp -t|i" /etc/php5/php.ini
 RUN    apk add --no-cache -t .fetch-deps \
