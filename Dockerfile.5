@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.8
 LABEL author='renothing' role='php-fpm' tags='php,php5,php-fpm,php-cli' description='php5 fpm based on alpine'
 #set language enviroments
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
@@ -90,6 +90,7 @@ RUN apk upgrade --update && \
     sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php5/fpm.d/www.conf && \
     sed -i "s|nobody|www-data|g" /etc/php5/fpm.d/www.conf && \
     sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php5/php.ini && \
+    sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php5/php.ini && \
     sed -i "s|expose_php\s*=.*|expose_php = Off|i" /etc/php5/php.ini && \
     sed -i "s|;\s*sendmail_path\s*=|sendmail_path = /usr/sbin/ssmtp -t|i" /etc/php5/php.ini
 RUN    apk add --no-cache -t .fetch-deps \
