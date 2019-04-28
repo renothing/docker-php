@@ -22,6 +22,7 @@ This repository contains **Dockerfile** of [PHP](http://www.php.net) for [Docker
 ```
     PORT=9000
     TIMEZONE=Asia/Shanghai
+    PHP_ERROR=Off
     PHP_MAX_EXECUTION=900
     PHP_MEMORY_LIMIT=256m
     PHP_MAX_UPLOAD_SIZE=50m

@@ -21,6 +21,7 @@ sed -i "s|;\s*pm.max_requests\s*=.*|pm.max_requests =${FPM_MAX_REQUESTS}|i" $fco
 sed -i "s|;*request_terminate_timeout\s*=.*|request_terminate_timeout = ${PHP_MAX_EXECUTION}|i" $fconf1 && \
 sed -i "s|;*request_slowlog_timeout\s*=.*|request_slowlog_timeout = ${FPM_SLOW_TIME}|i" $fconf1 && \
 sed -i "s|date.timezone\s*=.*|date.timezone = ${TIMEZONE}|i" $pconf && \
+sed -i "s|display_errors\s*=.*|display_errors = ${PHP_ERROR}|i" $pconf && \
 sed -i "s|max_execution_time\s*=.*|max_execution_time = ${PHP_MAX_EXECUTION}|i" $pconf && \
 sed -i "s|memory_limit\s*=.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" $pconf && \
 sed -i "s|upload_max_filesize\s*=.*|upload_max_filesize = ${PHP_MAX_UPLOAD_SIZE}|i" $pconf && \
