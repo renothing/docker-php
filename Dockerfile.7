@@ -95,7 +95,7 @@ RUN apk upgrade --update && \
     sed -i "s|;catch_workers_output\s*=.*|catch_workers_output = yes|i" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;\s*clear_env\s*=.*|clear_env = no|i" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|nobody|www-data|g" /etc/php7/php-fpm.conf /etc/php7/php-fpm.d/www.conf && \
-    sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 0|i" /etc/php7/php.ini && \
+    sed -i "s|;\s*cgi.fix_pathinfo\s*=.*|cgi.fix_pathinfo = 1|i" /etc/php7/php.ini && \
     sed -i "s|short_open_tag\s*=.*|short_open_tag = On|i" /etc/php7/php.ini && \
     sed -i "s|expose_php\s*=.*|expose_php = Off|i" /etc/php7/php.ini && \
     sed -i "s|;\s*sendmail_path\s*=|sendmail_path = /usr/sbin/ssmtp -t|i" /etc/php7/php.ini
