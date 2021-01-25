@@ -3,7 +3,7 @@ ARG TOKEN
 RUN apk update && apk add git && \
     curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer 
-RUN  composer global require "fxp/composer-asset-plugin:^1.3.1"
+#RUN  composer global require "fxp/composer-asset-plugin"
 #    composer config -g github-oauth.github.com "${TOKEN}"
 WORKDIR /var/www
 # Expose volumes
