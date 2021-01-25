@@ -36,6 +36,7 @@ RUN apk upgrade --update && \
     apk add \
     php7-bcmath \
     php7-bz2 \
+    php7-calendar \
     php7-ctype \
     php7-curl \
     php7-dom \
@@ -73,6 +74,7 @@ RUN apk upgrade --update && \
     php7-xmlreader \
     php7-xmlrpc \
     php7-xmlwriter \
+    php7-xsl \
     php7-zip \
     php7-zlib \
     php7-pecl-apcu \
@@ -82,7 +84,7 @@ RUN apk upgrade --update && \
     php7-pecl-mongodb \
     php7-pecl-oauth \
     php7-pecl-redis \
-    php7-pecl-xlswriter \
+    php7-pecl-uuid \
     php7-pecl-yaml && \
 # Set environments
     sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php7/php-fpm.conf && \
