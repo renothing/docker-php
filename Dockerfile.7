@@ -20,8 +20,8 @@ ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
 #RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g;s/http/https/g' /etc/apk/repositories && apk upgrade --update && \ 
 RUN apk upgrade --update && \ 
 # ensure www-data user exists
-    addgroup -g 82 -S www-data && \
-    adduser -u 82 -D -S -G www-data -h /var/www www-data && \
+    grep -q www-data /etc/group || addgroup -g 82 -S www-data && \
+    grep -q www-data /etc/passwd || adduser -u 82 -D -S -G www-data -h /var/www www-data && \
 # 82 is the standard uid/gid for "www-data" in Alpine
     apk add --no-cache --virtual .pre-deps \
     ssmtp \
