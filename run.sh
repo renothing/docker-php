@@ -11,10 +11,12 @@ fconf=/etc/php${v}/php-fpm.conf
 [ $v == 5 ] && fconf1=/etc/php${v}/fpm.d/www.conf
 [ $v == 7 ] && fconf1=/etc/php${v}/php-fpm.d/www.conf
 FPM_INIT=$((FPM_MIN+1))
-sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = ${PORT}|g" $fconf1 && \
+sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" $fconf && \
 sed -i "s|;\s*emergency_restart_threshold\s*=.*|emergency_restart_threshold =${FPM_RESTART_THRESHOLD}|i" $fconf && \
 sed -i "s|;\s*emergency_restart_interval\s*=.*|emergency_restart_interval =${FPM_RESTART_INTERVAL}|i" $fconf && \
 #sed -i "s|;\s*process.max\s*=.*|process.max =${FPM_MAX}|i" $fconf && \
+sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" $fconf1 && \
+sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = ${PORT}|g" $fconf1 && \
 sed -i "s|;*pm.max_children\s*=.*|pm.max_children =${FPM_MAX}|i" $fconf1 && \
 sed -i "s|pm.start_servers\s*=.*|pm.start_servers =${FPM_INIT}|i" $fconf1 && \
 sed -i "s|pm.min_spare_servers\s*=.*|pm.min_spare_servers =${FPM_MIN}|i" $fconf1 && \

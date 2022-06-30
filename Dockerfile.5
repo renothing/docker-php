@@ -81,7 +81,6 @@ RUN apk upgrade --update && \
 # Set environments
     sed -n '/^\[www\]/,$p' /etc/php5/php-fpm.conf > /etc/php5/fpm.d/www.conf && \
     sed -i '/^\[www\]/,$d' /etc/php5/php-fpm.conf && \
-    sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php5/fpm.d/www.conf && \
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php5/php-fpm.conf && \
     sed -i "s|;*listen\s*=\s*/||g" /etc/php5/fpm.d/www.conf && \
     sed -i "s|;\s*process_control_timeout\s*=.*|process_control_timeout =1d|i" /etc/php5/php-fpm.conf && \

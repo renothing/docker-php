@@ -88,7 +88,6 @@ RUN apk upgrade --update && \
     php7-pecl-uuid \
     php7-pecl-yaml && \
 # Set environments
-    sed -i "s|\s*error_log\s*=\s*/var/log/php-fpm.log|error_log = /dev/stderr|i" /etc/php7/php-fpm.conf && \
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf && \
     sed -i "s|;*listen\s*=\s*/||g" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;\s*process_control_timeout\s*=.*|process_control_timeout =1d|i" /etc/php7/php-fpm.conf && \
