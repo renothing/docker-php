@@ -5,8 +5,10 @@ RUN apk update && apk add git && \
     mv composer.phar /usr/local/bin/composer 
 #RUN  composer global require "fxp/composer-asset-plugin"
 #    composer config -g github-oauth.github.com "${TOKEN}"
+#start scripts
+COPY run.dev.sh /opt/
 WORKDIR /var/www
 # Expose volumes
 #VOLUME ["/var/www"]
 # Entry point
-ENTRYPOINT ["/usr/bin/php"]
+ENTRYPOINT ["sh", "/opt/run.dev.sh"]

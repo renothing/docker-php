@@ -1,4 +1,4 @@
-#! /bin/sh -x
+#! /bin/sh
 #
 # run.sh
 # Copyright (C) 2016-10-07 23:53 renothing <frankdot@qq.com>
@@ -39,5 +39,4 @@ sed -i "s|;\?max_input_vars\s*=.*|max_input_vars = 5000|i" $pconf && \
 cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 echo "${TIMEZONE}" > /etc/TZ 
 stat -c "%U" /var/www|grep -q www-data || chown www-data:www-data /var/www
-[ $v == 5 ] && exec /usr/bin/php-fpm5 -F
-[ $v == 7 ] && exec /usr/sbin/php-fpm7 -F
+exec /usr/bin/php $*
